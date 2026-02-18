@@ -79,9 +79,11 @@ const TAX_OPTIONS: { value: TaxOption; label: string }[] = [
   { value: "custom", label: "Personnalisée" },
 ];
 
-const MARKETING_HEADLINE = "Pilotez votre patrimoine en toute simplicité avec Ramify";
+const MARKETING_HEADLINE = "Jusqu'à +12,68 % annualisé depuis 5 ans* avec Ramify";
 const MARKETING_BODY =
-  "Découvrez comment optimiser votre épargne grâce à nos solutions d'investissement diversifiées et performantes.";
+  "Ramify est la gestion pilotée la plus performante et diversifiée du marché. Accédez à un univers complet d'investissement dès 1000 €.";
+const MARKETING_DISCLAIMER =
+  "*Portefeuille Ramify Flagship pour un risque de 10/10 de 2021 à 2025. Les performances passées ne préjugent pas des performances futures.";
 
 export interface CompoundInterestSimulatorProps {
   initialAmount: number;
@@ -823,6 +825,9 @@ export function CompoundInterestSimulator(rawProps: Partial<CompoundInterestSimu
           <span className={styles.callToActionText}>{props.callToActionText}</span>
         </a>
       ) : null}
+      <p className={styles.promoDisclaimer}>
+        <em>{MARKETING_DISCLAIMER}</em>
+      </p>
     </div>
   );
 

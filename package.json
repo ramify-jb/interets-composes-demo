@@ -9,6 +9,7 @@
     "share": "webflow library share",
     "dev": "vite",
     "build": "vite build",
+    "deploy:public-demo": "bash ./scripts/deploy-public-demo.sh",
     "verify": "npm run typecheck && npm run build && npm run bundle",
     "package:handoff": "rm -rf release && mkdir -p release && tar --exclude='./node_modules' --exclude='./dist' --exclude='./release' --exclude='./.vite' --exclude='./.env' -czf release/ramify-compound-interest-webflow-component.tar.gz ."
   },

@@ -307,9 +307,16 @@
 
 .commentBody {
   color: var(--ramify-grey-000);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   letter-spacing: 0.01em;
   line-height: 1.6;
+  margin: 0;
+}
+
+.promoDisclaimer {
+  color: var(--ramify-grey-300);
+  font-size: 0.6rem;
+  line-height: 1.5;
   margin: 0;
 }
 

@@ -93,6 +93,7 @@ Ils servaient uniquement au `postMessage` de l'ancienne version iframe.
 - Les options d'imposition (0%, presets, personnalisée) fonctionnent.
 - Le mode comparaison 2 scénarios fonctionne.
 - Les CTA ouvrent les bons liens.
+- Le lien d'explication TRI ("plus d'infos sur la méthode de calcul ici") s'ouvre normalement dans la page (et non dans un encadré de simulateur).
 
 ### Responsive
 
@@ -119,6 +120,23 @@ Ils servaient uniquement au `postMessage` de l'ancienne version iframe.
 - Déploiement versionné via Webflow Code Components (`bundle/share`).
 - Surface de bugs réduite (moins de glue JS page-level).
 
+### Impact SEO
+
+- Le contenu du simulateur est rendu directement dans la page, au lieu d'être isolé dans un document iframe séparé.
+- La structure de la page est plus cohérente pour l'indexation (moins de fragmentation entre page article et contenu embarqué).
+- Moins de dépendance à une origine externe pour charger une partie critique de la page.
+
+### Impact sécurité
+
+- Réduction de la surface d'attaque liée aux communications cross-origin iframe ↔ page.
+- Suppression du flux `postMessage` legacy pour hauteur/redirection, qui utilisait un ciblage permissif.
+- Moins de logique de "bridge" JS au niveau page, donc moins de risques d'erreurs d'intégration.
+
+### Impact UX
+
+- Navigation de liens plus prévisible (pas de comportement encapsulé par iframe).
+- Cas corrigé explicitement : le lien d'explication TRI ne s'ouvre plus à l'intérieur d'un encadré iframe, mais avec le comportement attendu de la page.
+
 ## 11) Ajouts visuels et fonctionnels par rapport au legacy
 
 - Mode comparaison de scénarios (Scénario 1 / Scénario 2 + écarts).
@@ -143,13 +161,15 @@ Archive générée :
 
 ## 13) Demo public via GitHub Pages (optionnel)
 
-Workflow disponible :
+Le demo public est publié dans un repo séparé :
 
-- `.github/workflows/interets-composes-demo-pages.yml`
+- Code: `https://github.com/ramify-jb/interets-composes-demo`
+- URL: `https://ramify-jb.github.io/interets-composes-demo/`
 
-Pré-requis dans GitHub :
+Pour publier une nouvelle version du demo depuis ce projet :
 
-1. `Settings > Pages`
-2. `Source: GitHub Actions`
+```bash
+npm run deploy:public-demo
+```
 
-Puis lancer le workflow `Demo - Interets Composes (GitHub Pages)`.
+La commande build le projet avec le bon base path puis pousse `dist/` sur la branche `gh-pages` du repo public.

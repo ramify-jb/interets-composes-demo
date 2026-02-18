@@ -15,6 +15,7 @@ npm install
 npm run dev
 npm run verify
 npm run share
+npm run deploy:public-demo
 npm run package:handoff
 ```
 
@@ -23,6 +24,7 @@ npm run package:handoff
 - `npm run dev` : preview local Vite.
 - `npm run verify` : vérification complète (`typecheck` + `build` + `bundle`).
 - `npm run share` : publication de la librairie Code Components.
+- `npm run deploy:public-demo` : publie le demo statique sur `https://ramify-jb.github.io/interets-composes-demo/`.
 - `npm run package:handoff` : crée une archive prête à transmettre à l'agence dans `release/`.
 
 ## Documentation de livraison
@@ -35,18 +37,32 @@ Voir `AGENCY_HANDOFF.md` pour :
 - la stratégie de rollback,
 - et les différences entre l'ancien simulateur iframe et cette version.
 
-## Demo GitHub Pages
+## Demo public (GitHub Pages)
 
-Un workflow est prêt pour publier le demo sur GitHub Pages :
+Le demo public est hébergé dans le repo dédié :
 
-- `.github/workflows/interets-composes-demo-pages.yml`
+- `https://github.com/ramify-jb/interets-composes-demo`
 
-Activation (une seule fois dans GitHub) :
+URL :
 
-1. Aller dans `Settings > Pages`.
-2. Dans `Build and deployment`, choisir `Source: GitHub Actions`.
-3. Lancer le workflow `Demo - Interets Composes (GitHub Pages)` (onglet Actions), ou merger sur `main`.
+- `https://ramify-jb.github.io/interets-composes-demo/`
 
-URL attendue (project pages) :
+Publication en une commande (depuis ce dossier) :
 
-- `https://<owner>.github.io/<repo>/`
+```bash
+npm run deploy:public-demo
+```
+
+## Modifier le copy de la box promotionnelle
+
+Éditer ces constantes dans :
+
+- `src/components/CompoundInterestSimulator.tsx`
+  - `MARKETING_HEADLINE`
+  - `MARKETING_BODY`
+
+Puis republier le demo :
+
+```bash
+npm run deploy:public-demo
+```
