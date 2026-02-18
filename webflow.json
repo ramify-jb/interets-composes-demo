@@ -1,0 +1,9 @@
+{
+  "library": {
+    "id": "ramify-simulateurs",
+    "name": "Ramify Simulateurs",
+    "description": "Bibliotheque de simulateurs financiers Ramify",
+    "components": ["./src/**/*.webflow.@(js|jsx|mjs|ts|tsx)"],
+    "globals": "./src/globals.webflow.ts"
+  }
+}

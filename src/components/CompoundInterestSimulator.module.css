@@ -1,0 +1,877 @@
+.simulatorContainer {
+  --ramify-font-normal: var(
+    --font--normal,
+    "PP Fragment Sans",
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    sans-serif
+  );
+  --ramify-font-heading: var(
+    --font--heading,
+    "PP Fragment Serif Regular",
+    "PP Fragment Serif",
+    "PT Serif",
+    Georgia,
+    serif
+  );
+  --ramify-font-label: var(--font--label, "PT Serif", serif);
+
+  --ramify-text-primary: var(--text--primary, #1e1e1e);
+  --ramify-text-secondary: var(--text--secondary, #726f6b);
+  --ramify-gold-700: var(--color--gold700, #b4843b);
+  --ramify-gold-500: var(--color--gold500, #efc27e);
+  --ramify-gold-200: var(--color--gold200, #f9f3eb);
+  --ramify-grey-000: var(--color--grey000, #ffffff);
+  --ramify-grey-100: var(--color--grey100, #f8f7f7);
+  --ramify-grey-200: var(--color--grey200, #ecebea);
+  --ramify-grey-300: var(--color--grey300, #d9d6d2);
+  --ramify-grey-500: var(--color--grey500, #989591);
+  --ramify-grey-600: var(--color--grey600, #726f6b);
+  --ramify-grey-800: var(--color--grey800, #2f2e2c);
+  --ramify-grey-900: var(--color--grey900, #1e1e1e);
+
+  color: var(--ramify-text-primary);
+  display: flex;
+  font-family: var(--ramify-font-normal);
+  font-weight: 300;
+  gap: 4%;
+  width: 100%;
+}
+
+/* ── Left panel ── */
+
+.inputPart {
+  border-right: 1px solid var(--ramify-grey-200);
+  display: flex;
+  flex-direction: column;
+  padding-right: 20px;
+  width: 38%;
+}
+
+.scenarioTabsRow {
+  border-bottom: 1px solid var(--ramify-grey-200);
+  display: grid;
+  gap: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 4px;
+}
+
+.scenarioTabButton {
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--ramify-grey-500);
+  cursor: pointer;
+  font-family: var(--ramify-font-normal);
+  font-size: 0.78rem;
+  font-weight: 300;
+  letter-spacing: 0.14em;
+  padding: 11px 6px 9px;
+  text-transform: uppercase;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.scenarioTabButton:hover {
+  color: var(--ramify-grey-800);
+}
+
+.scenarioTabButtonActive {
+  border-bottom-color: var(--ramify-gold-700);
+  color: var(--ramify-grey-900);
+  font-weight: 400;
+}
+
+.inputArea {
+}
+
+.inputContainer {
+  margin: 24px 0;
+  padding-bottom: 4px;
+}
+
+.inputLabel {
+  color: var(--ramify-gold-700);
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 300;
+  letter-spacing: 0.16em;
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+}
+
+.inputLine {
+  align-items: center;
+  border-bottom: 1px solid var(--ramify-grey-300);
+  display: flex;
+  gap: 8px;
+  min-height: 36px;
+  transition: border-color 0.2s ease;
+}
+
+.inputLine:focus-within {
+  border-bottom-color: var(--ramify-gold-700);
+}
+
+.inputField {
+  appearance: textfield;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  font-size: 1rem;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  outline: 0;
+  width: 100%;
+}
+
+.inputField::-webkit-inner-spin-button,
+.inputField::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.inputSuffix {
+  color: var(--ramify-grey-600);
+  font-size: 0.95rem;
+  font-weight: 300;
+}
+
+/* ── Imposition section ── */
+
+.impositionSection {
+  margin-top: 24px;
+}
+
+/* ── Tax option pills ── */
+
+.taxOptionsGrid {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 8px 0 4px;
+}
+
+.taxOptionPill {
+  background: var(--ramify-grey-000);
+  border: 1px solid var(--ramify-grey-300);
+  border-radius: 6px;
+  color: var(--ramify-grey-600);
+  cursor: pointer;
+  font-family: var(--ramify-font-normal);
+  font-size: 0.78rem;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  padding: 7px 4px;
+  text-align: center;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.taxOptionPill:hover {
+  border-color: var(--ramify-grey-500);
+  color: var(--ramify-grey-800);
+}
+
+.taxOptionPill:focus {
+  outline: none;
+}
+
+.taxOptionPillActive {
+  background: var(--ramify-gold-200);
+  border-color: var(--ramify-gold-700);
+  color: var(--ramify-gold-700);
+}
+
+.taxOptionPillActive:hover {
+  border-color: var(--ramify-gold-700);
+  color: var(--ramify-gold-700);
+}
+
+.taxOptionHint {
+  background: var(--ramify-grey-100);
+  border: 1px solid var(--ramify-grey-300);
+  border-radius: 6px;
+  color: var(--ramify-grey-600);
+  font-size: 0.72rem;
+  line-height: 1.4;
+  margin: 10px 0 2px;
+  padding: 10px 12px;
+}
+
+/* ── Custom tax inline row ── */
+
+.customTaxRow {
+  align-items: flex-end;
+  background: var(--ramify-grey-100);
+  border: 1px solid var(--ramify-grey-300);
+  border-radius: 6px;
+  display: flex;
+  gap: 12px;
+  margin: 10px 0 2px;
+  padding: 10px 12px;
+}
+
+.customTaxField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.customTaxField:first-child {
+  flex: 0 0 auto;
+  width: 72px;
+}
+
+.customTaxField:last-child {
+  flex: 1;
+}
+
+.customTaxLabel {
+  color: var(--ramify-grey-500);
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.customTaxInput {
+  align-items: center;
+  background: var(--ramify-grey-000);
+  border: 1px solid var(--ramify-grey-300);
+  border-radius: 6px;
+  display: flex;
+  padding: 0 8px;
+}
+
+.customTaxInput,
+.taxMethodSwitch .taxOptionPill {
+  height: 30px;
+}
+
+.customTaxInputField {
+  appearance: textfield;
+  background: transparent;
+  border: 0;
+  color: var(--ramify-grey-900);
+  font-size: 0.78rem;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  outline: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.customTaxInputField::-webkit-inner-spin-button,
+.customTaxInputField::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.customTaxSuffix {
+  color: var(--ramify-grey-500);
+  font-size: 0.78rem;
+  font-weight: 300;
+}
+
+.taxMethodSwitch {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* ── Bottom CTA ── */
+
+.bottomPart {
+  background-color: var(--ramify-grey-900);
+  background-image: url("https://cdn.prod.website-files.com/66c6f43f5f140ff1e09d4c92/66f2bcdbfc80536910a7ea7b_ramify-stack-dark.webp");
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 10px;
+  color: var(--ramify-grey-000);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding: 1.5rem;
+}
+
+.comment {
+  color: var(--ramify-grey-000);
+  font-family: var(--ramify-font-heading);
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.commentBody {
+  color: var(--ramify-grey-000);
+  font-size: 0.85rem;
+  letter-spacing: 0.01em;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.callToAction {
+  background: linear-gradient(90deg, var(--ramify-grey-900), var(--ramify-grey-800));
+  border-radius: 0.25rem;
+  color: var(--ramify-grey-100);
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.85rem 1.5rem;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  width: 100%;
+}
+
+.callToActionText {
+  position: relative;
+  z-index: 2;
+}
+
+.callToActionGlow {
+  background-color: var(--ramify-gold-700);
+  border-radius: 999px;
+  filter: blur(20px);
+  height: 5rem;
+  inset: 0 0 auto auto;
+  position: absolute;
+  transform: translate(50%, -50%);
+  transition: right 2.5s, top 2.5s;
+  width: 5rem;
+}
+
+.callToAction:hover .callToActionGlow {
+  right: 90%;
+  top: 100%;
+}
+
+/* ── Right panel ── */
+
+.chartPart {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 58%;
+}
+
+.dataContainer {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* ── Result box (gold container) ── */
+
+.resultBox {
+  background-image: linear-gradient(180deg, white, var(--ramify-grey-100));
+  border-radius: 6px;
+  box-shadow: 0px 3px 8px 0px #0000000F, 0px 14px 14px 0px #0000000D, 0px 31px 19px 0px #00000008, 0px 55px 22px 0px #00000003, 0px 86px 24px 0px #00000000;
+  margin-bottom: 2.5rem;
+  padding: 1.25rem;
+  position: relative;
+  width: 100%;
+}
+
+.titleResult {
+  align-items: baseline;
+  display: flex;
+  gap: 0.2rem;
+  margin-bottom: 0.5rem;
+  padding-right: 56px;
+  width: 100%;
+}
+
+.resultHeadline {
+  color: var(--ramify-grey-900);
+  font-family: var(--ramify-font-heading);
+  font-size: 1.75rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.resultValue {
+  color: var(--ramify-gold-700);
+  font-family: var(--ramify-font-heading);
+  font-size: 1.75rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0;
+}
+
+.resultBoxActions {
+  align-items: center;
+  display: flex;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.resultCompareButton {
+  background: var(--ramify-grey-100);
+  border: 0;
+  border-radius: 0 6px 0 0;
+  color: var(--ramify-grey-900);
+  cursor: pointer;
+  display: inline-flex;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  width: 40px;
+}
+
+.resultCompareIcon {
+  font-family: var(--ramify-font-normal);
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.resultCompareButton:focus-visible {
+  outline: 1px solid var(--ramify-grey-300);
+  outline-offset: -1px;
+}
+
+.resultCompareButton:hover {
+  color: var(--ramify-grey-800);
+}
+
+.resultCompareTooltip {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .resultCompareTooltip {
+    background: var(--ramify-grey-000);
+    border: 1px solid var(--ramify-grey-200);
+    border-radius: 4px;
+    color: var(--ramify-grey-600);
+    display: block;
+    font-family: var(--ramify-font-normal);
+    font-size: 0.72rem;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    opacity: 0;
+    padding: 6px 8px;
+    pointer-events: none;
+    position: absolute;
+    right: calc(100% + 8px);
+    top: 50%;
+    transform: translateY(-50%);
+    visibility: hidden;
+    white-space: nowrap;
+    z-index: 3;
+  }
+
+  .resultCompareButton:hover + .resultCompareTooltip,
+  .resultCompareButton:focus-visible + .resultCompareTooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* ── Result sentence ── */
+
+.mainSentence {
+  color: var(--ramify-grey-900);
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  line-height: 1.6;
+  margin: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.mainSentenceNumber {
+  border-bottom: 1px dotted var(--ramify-grey-300);
+  color: var(--ramify-grey-900);
+  font-family: var(--ramify-font-heading);
+  font-size: 1.1rem;
+  padding: 0 1px;
+}
+
+.mainSentenceKeyNumber {
+  border-bottom: 1px dotted var(--ramify-gold-700);
+  color: var(--ramify-gold-700);
+  font-family: var(--ramify-font-heading);
+  font-size: 1.2rem;
+  padding: 0 1px;
+}
+
+/* ── Tabs ── */
+
+.tabsRow {
+  border-bottom: 1px solid var(--ramify-grey-200);
+  display: flex;
+  gap: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.tabButton {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--ramify-grey-500);
+  cursor: pointer;
+  flex: 1;
+  font-family: var(--ramify-font-normal);
+  font-size: 0.78rem;
+  font-weight: 300;
+  letter-spacing: 0.16em;
+  line-height: 1.1;
+  padding: 10px 4px;
+  text-transform: uppercase;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.tabButton:hover {
+  color: var(--ramify-grey-800);
+}
+
+.tabButtonActive {
+  border-bottom-color: var(--ramify-gold-700);
+  color: var(--ramify-grey-900);
+  font-weight: 400;
+}
+
+/* ── Chart / Table panels ── */
+
+.panelContainer {
+  margin-top: 0.75rem;
+  width: 100%;
+}
+
+.chartArea {
+  height: 22vw;
+  max-height: 30vh;
+  min-height: 210px;
+  position: relative;
+  width: 100%;
+}
+
+.panelHidden {
+  display: none;
+}
+
+.chartCanvas {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.tableWrapper {
+  border: 1px solid var(--ramify-grey-200);
+  border-radius: 0;
+  height: 22vw;
+  max-height: 30vh;
+  min-height: 210px;
+  overflow: auto;
+}
+
+.tableElement {
+  border-collapse: collapse;
+  min-width: 720px;
+  width: 100%;
+}
+
+.tableHeadCell {
+  background: var(--ramify-grey-100);
+  border-bottom: 1px solid var(--ramify-grey-200);
+  color: var(--ramify-grey-800);
+  font-size: 0.74rem;
+  font-weight: 300;
+  letter-spacing: 0.16em;
+  padding: 10px;
+  position: sticky;
+  text-align: left;
+  text-transform: uppercase;
+  top: 0;
+}
+
+.tableCell {
+  border-bottom: 1px solid var(--ramify-grey-200);
+  color: var(--ramify-grey-800);
+  font-size: 0.84rem;
+  padding: 8px 10px;
+  text-align: left;
+}
+
+/* ── Receipt / Bill ── */
+
+.billContainer {
+  border-top: 1px solid var(--ramify-grey-300);
+  margin: 0.75rem 0 0.5rem;
+  overflow-x: auto;
+  text-align: left;
+  width: 100%;
+}
+
+.billRow {
+  align-items: center;
+  border-bottom: 1px solid var(--ramify-grey-200);
+  display: flex;
+  justify-content: space-between;
+  padding: 9px 0;
+  width: 100%;
+}
+
+.billRowTotal {
+  border-bottom-color: var(--ramify-grey-300);
+  padding: 10px 0;
+}
+
+.billRowHeader {
+  background: var(--ramify-grey-100);
+  min-height: 44px;
+  padding: 10px 0;
+}
+
+.billRowComparative {
+  column-gap: 12px;
+  display: grid;
+  grid-template-columns: minmax(140px, 1.8fr) repeat(3, minmax(0, 1fr));
+  justify-content: unset;
+  min-width: 540px;
+}
+
+.billLabel {
+  color: var(--ramify-grey-500);
+  font-size: 0.76rem;
+  font-weight: 300;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.billLabelHeader {
+  color: var(--ramify-grey-700, #54514d);
+}
+
+.billRowTotal .billLabel {
+  color: var(--ramify-gold-700);
+  font-size: 0.78rem;
+}
+
+.billValue {
+  color: var(--ramify-grey-800);
+  font-family: var(--ramify-font-heading);
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
+  line-height: 1.2;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.billValueHeader {
+  color: var(--ramify-grey-700, #54514d);
+  font-family: var(--ramify-font-normal);
+  font-size: 0.74rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.billValuePositive {
+  color: #1f7a43;
+}
+
+.billValueNegative {
+  color: #b13a2c;
+}
+
+.billRowTotal .billValue {
+  color: var(--ramify-gold-700);
+  font-size: 0.9rem;
+}
+
+.advisorLinkRow {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0.35rem 0 0.9rem;
+  width: 100%;
+}
+
+.advisorLink {
+  background: var(--ramify-gold-500);
+  box-shadow: 0px 3px 8px 0px #0000000F, 0px 14px 14px 0px #0000000D, 0px 31px 19px 0px #00000008, 0px 55px 22px 0px #00000003, 0px 86px 24px 0px #00000000;
+  color: var(--ramify-grey-900);
+  min-width: 240px;
+  width: auto;
+}
+
+.advisorLink .callToActionGlow {
+  background-color: var(--ramify-grey-000);
+}
+
+.advisorLink:hover {
+  transform: translateY(-1px);
+}
+
+/* ── Disclaimer ── */
+
+.disclaimerContainer {
+  width: 100%;
+}
+
+.disclaimer {
+  color: var(--ramify-grey-500);
+  font-size: 0.76rem;
+  margin: 16px 0 0;
+  text-align: left;
+}
+
+.disclaimer + .disclaimer {
+  margin-top: 0;
+}
+
+.disclaimerLink {
+  color: inherit;
+}
+
+/* ── Visibility helpers ── */
+
+.mobileOnly {
+  display: none;
+}
+
+/* ── Responsive ── */
+
+@media only screen and (max-width: 1000px) {
+  .tabButton {
+    font-size: 0.72rem;
+    padding: 8px 2px;
+  }
+
+  .scenarioTabButton {
+    font-size: 0.72rem;
+    padding: 9px 4px 7px;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .simulatorContainer {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .inputPart,
+  .chartPart {
+    border: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  .inputPart {
+    margin-bottom: 26px;
+  }
+
+  .desktopOnly {
+    display: none;
+  }
+
+  .mobileOnly {
+    display: flex;
+    margin-top: 1rem;
+  }
+
+  .inputField {
+    font-size: 0.9rem;
+  }
+
+  .mainSentence {
+    font-size: 0.92rem;
+  }
+
+  .chartArea {
+    height: 36vw;
+    margin-bottom: 10px;
+    max-height: 34vh;
+    min-height: 200px;
+  }
+
+  .tableWrapper {
+    height: 36vw;
+    max-height: 34vh;
+    min-height: 200px;
+  }
+
+  .billRowComparative {
+    min-width: 500px;
+  }
+
+  .advisorLinkRow {
+    justify-content: stretch;
+  }
+
+  .advisorLink {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .taxOptionsGrid,
+  .taxMethodSwitch {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .titleResult {
+    flex-wrap: wrap;
+  }
+
+  .resultHeadline,
+  .resultValue {
+    font-size: 1.4rem;
+  }
+
+  .mainSentence {
+    font-size: 0.86rem;
+  }
+
+  .mainSentenceKeyNumber {
+    font-size: 1.1rem;
+  }
+
+  .mainSentenceNumber {
+    font-size: 1rem;
+  }
+
+  .billRow {
+    padding: 7px 0;
+  }
+
+  .billLabel {
+    font-size: 0.7rem;
+  }
+
+  .billValue {
+    font-size: 0.8rem;
+  }
+
+  .chartArea {
+    height: 44vw;
+    min-height: 180px;
+  }
+
+  .tableWrapper {
+    height: 44vw;
+    min-height: 180px;
+  }
+
+  .tableHeadCell,
+  .tableCell {
+    font-size: 0.74rem;
+  }
+}
