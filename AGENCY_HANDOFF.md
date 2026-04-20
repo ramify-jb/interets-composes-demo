@@ -4,6 +4,18 @@ Ce document décrit la procédure complète pour installer, publier et remplacer
 
 Le repo public est la source de vérité du simulateur. Toute évolution du composant doit partir de ce repo, puis être repartagée vers Webflow via `npm run share`.
 
+Contexte Webflow validé au 20 avril 2026 :
+
+- le workspace Ramify est sur un plan `Growth`,
+- la librairie `Ramify Simulateurs` a déjà été partagée avec succès au workspace,
+- en revanche, le composant n'a pas encore été installé sur la page live à notre connaissance.
+
+Conséquence pratique :
+
+- il n'y a pas de `page branching` ni de `single-page publish`,
+- donc le bon process n'est pas de peaufiner directement la page live,
+- il faut idéalement travailler sur un site dupliqué / sandbox puis faire un cutover court sur prod.
+
 ## 1) Ce qui est livré
 
 - Composant Webflow : `Simulateur Intérêts Composés`
@@ -36,7 +48,7 @@ Cette commande valide :
 - Build front (`vite build`)
 - Bundle Webflow (`webflow library bundle`)
 
-## 4) Publier la librairie Webflow
+## 4) Publier ou mettre à jour la librairie Webflow
 
 Exécuter :
 
@@ -51,6 +63,12 @@ Cette commande :
 - la partage au workspace sélectionné.
 
 Résultat attendu : message de succès Webflow CLI confirmant le partage de la librairie dans le workspace cible.
+
+Important :
+
+- cette étape a déjà été faite une première fois pour le workspace Ramify,
+- il faut la relancer uniquement si le code du simulateur change et qu'une nouvelle version doit être envoyée à Webflow,
+- sur le plan `Growth`, cette librairie occupe le slot unique de Shared Library du workspace.
 
 ## 5) Installer la librairie dans le site Webflow
 
@@ -67,8 +85,26 @@ Procédure :
 3. Dans `Available to install`, installer la librairie partagée `Ramify Simulateurs`.
 4. Ouvrir ensuite le panneau `Components`.
 5. Vérifier que `Simulateur Intérêts Composés` apparaît dans le groupe `Ramify`.
+6. Si la librairie est déjà installée et qu'une nouvelle version a été repartagée, accepter l'update proposée dans `Libraries`.
 
-## 6) Remplacer l'ancien iframe sur la page
+## 6) Process recommandé sans risque (plan Growth)
+
+Le workspace Ramify étant sur un plan `Growth`, la stratégie recommandée est :
+
+1. Dupliquer le site Webflow prod en site sandbox.
+2. Installer la librairie `Ramify Simulateurs` sur ce sandbox.
+3. Remplacer l'ancien iframe par le composant sur la page sandbox.
+4. Faire toute la QA sur l'URL Webflow sandbox.
+5. Reproduire ensuite exactement les changements validés sur le site prod.
+6. Publier dans une courte fenêtre contrôlée.
+
+Pourquoi :
+
+- pas de `page branching`,
+- pas de `single-page publish`,
+- donc un publish prod peut embarquer d'autres changements Webflow en attente.
+
+## 7) Remplacer l'ancien iframe sur la page
 
 Page cible : `https://www.ramify.fr/outils/calculatrice-interet-compose`
 
@@ -101,7 +137,7 @@ Paramètres recommandés :
 - Lien CTA : `/offres`
 - Afficher disclaimer : `true`
 
-## 7) Nettoyage post-migration dans la page Webflow
+## 8) Nettoyage post-migration dans la page Webflow
 
 Retirer les anciens listeners JS liés à l'iframe :
 
@@ -115,7 +151,7 @@ Important :
 - cette suppression doit se faire dans le custom code de la page ou du site seulement si ce code n'est plus utilisé par d'autres simulateurs iframe,
 - la publication finale du site reste une action manuelle dans Webflow Designer.
 
-## 8) QA à exécuter avant publication
+## 9) QA à exécuter avant publication
 
 ### Fonctionnel
 
@@ -140,13 +176,19 @@ Important :
 - En mode Assurance-vie (horizon >= 8 ans), vérifier que l'abattement ne s'applique que sur la part IR.
 - Le bloc détaillé de rendement annualisé (brut + impacts frais/fiscalité) n'apparaît que si les frais ou les impôts sont non nuls.
 
-## 9) Rollback (si incident)
+## 10) Rollback (si incident)
 
 1. Retirer temporairement le Code Component de la page.
 2. Réinsérer l'ancien bloc iframe.
 3. Republier la page.
 
-## 10) Pourquoi cette implémentation est meilleure que l'iframe legacy
+Avant le cutover prod, garder sous la main :
+
+- l'ancien bloc `iframe#myIframe`,
+- le custom code legacy `iframeHeight` / `redirect` si ce code devait être remis,
+- et vérifier qu'aucun autre changement Webflow non lié n'est en attente de publication.
+
+## 11) Pourquoi cette implémentation est meilleure que l'iframe legacy
 
 - Plus de dépendance à `postMessage` pour redimensionnement/redirection.
 - Plus d'iframe externe GitHub Pages à charger.
@@ -171,7 +213,7 @@ Important :
 - Navigation de liens plus prévisible (pas de comportement encapsulé par iframe).
 - Cas corrigé explicitement : le lien d'explication du rendement annualisé ne s'ouvre plus à l'intérieur d'un encadré iframe, mais avec le comportement attendu de la page.
 
-## 11) Ajouts visuels et fonctionnels par rapport au legacy
+## 12) Ajouts visuels et fonctionnels par rapport au legacy
 
 - Mode comparaison de scénarios (Scénario 1 / Scénario 2 + écarts).
 - Vues multiples : graphique, tableau annuel, tableau mensuel.
@@ -181,7 +223,7 @@ Important :
 - CTA contextualisé en mode comparaison ("Échanger avec un conseiller").
 - Composant configurable depuis le panneau de props Webflow.
 
-## 12) Packaging pour transmission agence
+## 13) Packaging pour transmission agence
 
 Créer l'archive à partager :
 
@@ -193,7 +235,7 @@ Archive générée :
 
 - `release/ramify-compound-interest-webflow-component.tar.gz`
 
-## 13) Demo public via GitHub Pages (optionnel)
+## 14) Demo public via GitHub Pages (optionnel)
 
 Le demo public est publié depuis ce repo :
 
