@@ -7,9 +7,9 @@ Le repo public est la source de vérité du simulateur. Toute évolution du comp
 Contexte de livraison validé au 20 avril 2026 :
 
 - la librairie `Ramify Simulateurs` a déjà été partagée avec succès au workspace,
-- en revanche, le composant n'a pas encore été installé sur la page live à notre connaissance.
+- en revanche, le composant n'a pas encore été installé sur la page live.
 
-Recommandation :
+Suggestion puisque la page reçoit pas mal de trafic :
 
 - éviter de peaufiner directement sur la page live,
 - valider d'abord l'intégration sur un site dupliqué / sandbox,
@@ -70,12 +70,6 @@ Important :
 
 ## 5) Installer la librairie dans le site Webflow
 
-Cette étape ne nécessite pas l'agence si vous avez :
-
-- un accès au workspace Webflow Ramify,
-- un accès Designer sur le site Ramify,
-- et le droit d'installer / mettre à jour des Libraries.
-
 Procédure :
 
 1. Ouvrir le Designer du site Ramify.
@@ -85,9 +79,9 @@ Procédure :
 5. Vérifier que `Simulateur Intérêts Composés` apparaît dans le groupe `Ramify`.
 6. Si la librairie est déjà installée et qu'une nouvelle version a été repartagée, accepter l'update proposée dans `Libraries`.
 
-## 6) Process recommandé sans risque
+## 6) Suggestion de process sans risque
 
-La stratégie recommandée est :
+Une façon prudente de procéder serait :
 
 1. Dupliquer le site Webflow prod en site sandbox.
 2. Installer la librairie `Ramify Simulateurs` sur ce sandbox.
@@ -196,9 +190,8 @@ Avant le cutover prod, garder sous la main :
 
 ### Impact SEO
 
-- Le contenu du simulateur est rendu directement dans la page, au lieu d'être isolé dans un document iframe séparé.
-- La structure de la page est plus cohérente pour l'indexation (moins de fragmentation entre page article et contenu embarqué).
-- Moins de dépendance à une origine externe pour charger une partie critique de la page.
+- **Google peut maintenant lire le simulateur :** aujourd'hui, le contenu dans l'iframe est invisible pour Google. Avec un composant natif, le simulateur fait partie du contenu de la page : Google le voit, l'indexe, et ça enrichit la pertinence de la page sur les requêtes liées.
+- **Une seule page cohérente au lieu de deux morceaux :** l'iframe crée une fragmentation : pour Google, c'est un article d'un côté et un document technique externe de l'autre. En intégrant le simulateur nativement, la page forme un tout cohérent, ce qui renforce les signaux de qualité (temps passé, interaction, profondeur de contenu) sur une seule URL.
 
 ### Impact sécurité
 
@@ -209,7 +202,6 @@ Avant le cutover prod, garder sous la main :
 ### Impact UX
 
 - Navigation de liens plus prévisible (pas de comportement encapsulé par iframe).
-- Cas corrigé explicitement : le lien d'explication du rendement annualisé ne s'ouvre plus à l'intérieur d'un encadré iframe, mais avec le comportement attendu de la page.
 
 ## 12) Ajouts visuels et fonctionnels par rapport au legacy
 
@@ -221,19 +213,7 @@ Avant le cutover prod, garder sous la main :
 - CTA contextualisé en mode comparaison ("Échanger avec un conseiller").
 - Composant configurable depuis le panneau de props Webflow.
 
-## 13) Packaging pour transmission agence
-
-Créer l'archive à partager :
-
-```bash
-npm run package:handoff
-```
-
-Archive générée :
-
-- `release/ramify-compound-interest-webflow-component.tar.gz`
-
-## 14) Demo public via GitHub Pages (optionnel)
+## 13) Demo public via GitHub Pages (optionnel)
 
 Le demo public est publié depuis ce repo :
 
