@@ -4,17 +4,16 @@ Ce document décrit la procédure complète pour installer, publier et remplacer
 
 Le repo public est la source de vérité du simulateur. Toute évolution du composant doit partir de ce repo, puis être repartagée vers Webflow via `npm run share`.
 
-Contexte Webflow validé au 20 avril 2026 :
+Contexte de livraison validé au 20 avril 2026 :
 
-- le workspace Ramify est sur un plan `Growth`,
 - la librairie `Ramify Simulateurs` a déjà été partagée avec succès au workspace,
 - en revanche, le composant n'a pas encore été installé sur la page live à notre connaissance.
 
-Conséquence pratique :
+Recommandation :
 
-- il n'y a pas de `page branching` ni de `single-page publish`,
-- donc le bon process n'est pas de peaufiner directement la page live,
-- il faut idéalement travailler sur un site dupliqué / sandbox puis faire un cutover court sur prod.
+- éviter de peaufiner directement sur la page live,
+- valider d'abord l'intégration sur un site dupliqué / sandbox,
+- puis faire un cutover court sur prod.
 
 ## 1) Ce qui est livré
 
@@ -67,8 +66,7 @@ Résultat attendu : message de succès Webflow CLI confirmant le partage de la l
 Important :
 
 - cette étape a déjà été faite une première fois pour le workspace Ramify,
-- il faut la relancer uniquement si le code du simulateur change et qu'une nouvelle version doit être envoyée à Webflow,
-- sur le plan `Growth`, cette librairie occupe le slot unique de Shared Library du workspace.
+- il faut la relancer uniquement si le code du simulateur change et qu'une nouvelle version doit être envoyée à Webflow.
 
 ## 5) Installer la librairie dans le site Webflow
 
@@ -87,9 +85,9 @@ Procédure :
 5. Vérifier que `Simulateur Intérêts Composés` apparaît dans le groupe `Ramify`.
 6. Si la librairie est déjà installée et qu'une nouvelle version a été repartagée, accepter l'update proposée dans `Libraries`.
 
-## 6) Process recommandé sans risque (plan Growth)
+## 6) Process recommandé sans risque
 
-Le workspace Ramify étant sur un plan `Growth`, la stratégie recommandée est :
+La stratégie recommandée est :
 
 1. Dupliquer le site Webflow prod en site sandbox.
 2. Installer la librairie `Ramify Simulateurs` sur ce sandbox.
@@ -100,9 +98,9 @@ Le workspace Ramify étant sur un plan `Growth`, la stratégie recommandée est 
 
 Pourquoi :
 
-- pas de `page branching`,
-- pas de `single-page publish`,
-- donc un publish prod peut embarquer d'autres changements Webflow en attente.
+- la page cible est déjà live et reçoit du trafic,
+- le sandbox permet de valider l'intégration sans travailler dans l'urgence,
+- puis de reproduire les changements validés proprement sur prod.
 
 ## 7) Remplacer l'ancien iframe sur la page
 
