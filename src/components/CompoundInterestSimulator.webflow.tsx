@@ -1,12 +1,19 @@
 import { PropType, PropValues, props } from "@webflow/data-types";
 import { declareComponent } from "@webflow/react";
 import { CompoundInterestSimulator, CompoundInterestSimulatorProps } from "./CompoundInterestSimulator";
-import { TaxApplicationMethod } from "../domain/compoundInterest";
+import { CapitalizationFrequencyMonths, TaxApplicationMethod } from "../domain/compoundInterest";
 
 type MethodLabel = "Imposition annuelle" | "Imposition en fin d'horizon";
+type CapitalizationFrequencyLabel = "1 mois" | "3 mois" | "12 mois";
+type AssuranceVieAllowanceLabel = "Aucun" | "Célibataire (4 600 €)" | "Couple (9 200 €)";
 
-type WebflowSimulatorProps = Omit<CompoundInterestSimulatorProps, "defaultTaxApplicationMethod" | "callToActionLink"> & {
+type WebflowSimulatorProps = Omit<
+  CompoundInterestSimulatorProps,
+  "defaultTaxApplicationMethod" | "defaultCapitalizationFrequencyMonths" | "defaultAssuranceVieAllowanceMode" | "callToActionLink"
+> & {
   defaultTaxApplicationLabel: MethodLabel;
+  defaultCapitalizationFrequencyLabel: CapitalizationFrequencyLabel;
+  defaultAssuranceVieAllowanceLabel: AssuranceVieAllowanceLabel;
   callToActionLink: PropValues[PropType.Link];
 };
 
@@ -15,8 +22,25 @@ const taxMethodByLabel: Record<MethodLabel, TaxApplicationMethod> = {
   "Imposition en fin d'horizon": "end_of_investment",
 };
 
+const capitalizationFrequencyByLabel: Record<CapitalizationFrequencyLabel, CapitalizationFrequencyMonths> = {
+  "1 mois": 1,
+  "3 mois": 3,
+  "12 mois": 12,
+};
+
+const assuranceVieAllowanceByLabel: Record<
+  AssuranceVieAllowanceLabel,
+  CompoundInterestSimulatorProps["defaultAssuranceVieAllowanceMode"]
+> = {
+  Aucun: "none",
+  "Célibataire (4 600 €)": "single",
+  "Couple (9 200 €)": "couple",
+};
+
 const WebflowCompoundInterestSimulator = ({
   defaultTaxApplicationLabel,
+  defaultCapitalizationFrequencyLabel,
+  defaultAssuranceVieAllowanceLabel,
   callToActionLink,
   ...rest
 }: WebflowSimulatorProps) => {
@@ -24,6 +48,8 @@ const WebflowCompoundInterestSimulator = ({
     <CompoundInterestSimulator
       {...rest}
       defaultTaxApplicationMethod={taxMethodByLabel[defaultTaxApplicationLabel] ?? "end_of_investment"}
+      defaultCapitalizationFrequencyMonths={capitalizationFrequencyByLabel[defaultCapitalizationFrequencyLabel] ?? 12}
+      defaultAssuranceVieAllowanceMode={assuranceVieAllowanceByLabel[defaultAssuranceVieAllowanceLabel] ?? "single"}
       callToActionLink={callToActionLink}
     />
   );
@@ -82,10 +108,22 @@ export default declareComponent(WebflowCompoundInterestSimulator, {
       options: ["Imposition annuelle", "Imposition en fin d'horizon"],
       defaultValue: "Imposition en fin d'horizon",
     }),
-    adjustPresentValue: props.Boolean({
-      name: "Ajuster la courbe pour impôt final",
+    defaultCapitalizationFrequencyLabel: props.Variant({
+      name: "Capitalisation par défaut",
       group: "Paramètres",
-      defaultValue: true,
+      options: ["1 mois", "3 mois", "12 mois"],
+      defaultValue: "12 mois",
+    }),
+    defaultAssuranceVieAllowanceLabel: props.Variant({
+      name: "Abattement AV par défaut",
+      group: "Paramètres",
+      options: ["Aucun", "Célibataire (4 600 €)", "Couple (9 200 €)"],
+      defaultValue: "Célibataire (4 600 €)",
+    }),
+    adjustPresentValue: props.Boolean({
+      name: "Afficher fiscalité latente (courbe)",
+      group: "Paramètres",
+      defaultValue: false,
     }),
     showCallToAction: props.Boolean({
       name: "Afficher CTA",

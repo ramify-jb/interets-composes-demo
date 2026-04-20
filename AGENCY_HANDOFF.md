@@ -1,6 +1,8 @@
-# Handoff agence Webflow - Simulateur d'intérêts composés
+# Handoff client / agence Webflow - Simulateur d'intérêts composés
 
 Ce document décrit la procédure complète pour installer, publier et remplacer l'ancien simulateur iframe par le Code Component natif Webflow.
+
+Le repo public est la source de vérité du simulateur. Toute évolution du composant doit partir de ce repo, puis être repartagée vers Webflow via `npm run share`.
 
 ## 1) Ce qui est livré
 
@@ -12,7 +14,7 @@ Ce document décrit la procédure complète pour installer, publier et remplacer
 
 ## 2) Préparer l'environnement
 
-1. Ouvrir `webflow-code-component/`.
+1. Ouvrir la racine de ce repo.
 2. Installer les dépendances :
    ```bash
    npm install
@@ -42,23 +44,45 @@ Exécuter :
 npm run share
 ```
 
-Résultat attendu : URL de partage de librairie Webflow.
+Cette commande :
+
+- authentifie le workspace Webflow si nécessaire,
+- compile la librairie Code Components,
+- la partage au workspace sélectionné.
+
+Résultat attendu : message de succès Webflow CLI confirmant le partage de la librairie dans le workspace cible.
 
 ## 5) Installer la librairie dans le site Webflow
 
+Cette étape ne nécessite pas l'agence si vous avez :
+
+- un accès au workspace Webflow Ramify,
+- un accès Designer sur le site Ramify,
+- et le droit d'installer / mettre à jour des Libraries.
+
+Procédure :
+
 1. Ouvrir le Designer du site Ramify.
-2. Ouvrir Apps / Code Components.
-3. Installer la shared library via l'URL retournée par `npm run share`.
-4. Vérifier que `Simulateur Intérêts Composés` apparaît dans le groupe `Ramify`.
+2. Ouvrir le panneau `Libraries` (`L`).
+3. Dans `Available to install`, installer la librairie partagée `Ramify Simulateurs`.
+4. Ouvrir ensuite le panneau `Components`.
+5. Vérifier que `Simulateur Intérêts Composés` apparaît dans le groupe `Ramify`.
 
 ## 6) Remplacer l'ancien iframe sur la page
 
 Page cible : `https://www.ramify.fr/outils/calculatrice-interet-compose`
 
 1. Ouvrir la page dans Webflow Designer.
-2. Supprimer le bloc embed contenant `iframe#myIframe`.
-3. Insérer `Simulateur Intérêts Composés` à la même place.
-4. Mettre le composant en largeur 100%.
+2. Repérer le bloc embed legacy contenant `iframe#myIframe`.
+3. Supprimer ce bloc iframe.
+4. Insérer `Simulateur Intérêts Composés` à la même place.
+5. Mettre le composant en largeur 100%.
+
+État actuel observé sur la page live au 20 avril 2026 :
+
+- la page publie encore `iframe#myIframe`,
+- source iframe : `https://ramify.github.io/simulateur-site/`,
+- les listeners legacy `iframeHeight` et `redirect` sont encore présents.
 
 Paramètres recommandés :
 
@@ -69,7 +93,9 @@ Paramètres recommandés :
 - Taux de frais annuel : `0`
 - Taux d'imposition : `0`
 - Méthode d'imposition par défaut : `Imposition en fin d'horizon`
-- Ajuster la courbe pour impôt final : `true`
+- Capitalisation par défaut : `12 mois`
+- Abattement AV par défaut : `Célibataire (4 600 €)`
+- Afficher fiscalité latente (courbe) : `false`
 - Afficher CTA : `true`
 - Texte CTA : `Comparer les offres`
 - Lien CTA : `/offres`
@@ -84,6 +110,11 @@ Retirer les anciens listeners JS liés à l'iframe :
 
 Ils servaient uniquement au `postMessage` de l'ancienne version iframe.
 
+Important :
+
+- cette suppression doit se faire dans le custom code de la page ou du site seulement si ce code n'est plus utilisé par d'autres simulateurs iframe,
+- la publication finale du site reste une action manuelle dans Webflow Designer.
+
 ## 8) QA à exécuter avant publication
 
 ### Fonctionnel
@@ -93,7 +124,7 @@ Ils servaient uniquement au `postMessage` de l'ancienne version iframe.
 - Les options d'imposition (0%, presets, personnalisée) fonctionnent.
 - Le mode comparaison 2 scénarios fonctionne.
 - Les CTA ouvrent les bons liens.
-- Le lien d'explication TRI ("plus d'infos sur la méthode de calcul ici") s'ouvre normalement dans la page (et non dans un encadré de simulateur).
+- Le footer affiche bien le disclaimer actuel sur le rendement annualisé, sans ancien lien de méthodologie.
 
 ### Responsive
 
@@ -104,7 +135,10 @@ Ils servaient uniquement au `postMessage` de l'ancienne version iframe.
 ### Régression métier
 
 - Capital final, versements, intérêts, frais et impôts cohérents.
-- TRI net affiché dans la phrase de synthèse.
+- Rendement annualisé net affiché dans la phrase de synthèse.
+- En mode "imposition en fin d'horizon", les impôts apparaissent uniquement sur la dernière ligne des tableaux (sauf si l'option "fiscalité latente" est activée).
+- En mode Assurance-vie (horizon >= 8 ans), vérifier que l'abattement ne s'applique que sur la part IR.
+- Le bloc détaillé de rendement annualisé (brut + impacts frais/fiscalité) n'apparaît que si les frais ou les impôts sont non nuls.
 
 ## 9) Rollback (si incident)
 
@@ -135,7 +169,7 @@ Ils servaient uniquement au `postMessage` de l'ancienne version iframe.
 ### Impact UX
 
 - Navigation de liens plus prévisible (pas de comportement encapsulé par iframe).
-- Cas corrigé explicitement : le lien d'explication TRI ne s'ouvre plus à l'intérieur d'un encadré iframe, mais avec le comportement attendu de la page.
+- Cas corrigé explicitement : le lien d'explication du rendement annualisé ne s'ouvre plus à l'intérieur d'un encadré iframe, mais avec le comportement attendu de la page.
 
 ## 11) Ajouts visuels et fonctionnels par rapport au legacy
 
@@ -161,7 +195,7 @@ Archive générée :
 
 ## 13) Demo public via GitHub Pages (optionnel)
 
-Le demo public est publié dans un repo séparé :
+Le demo public est publié depuis ce repo :
 
 - Code: `https://github.com/ramify-jb/interets-composes-demo`
 - URL: `https://ramify-jb.github.io/interets-composes-demo/`
@@ -172,4 +206,4 @@ Pour publier une nouvelle version du demo depuis ce projet :
 npm run deploy:public-demo
 ```
 
-La commande build le projet avec le bon base path puis pousse `dist/` sur la branche `gh-pages` du repo public.
+La commande build le projet avec le bon base path puis pousse `dist/` sur la branche `gh-pages` de ce repo.

@@ -4,6 +4,7 @@
   "private": true,
   "description": "Webflow Code Component for Ramify compound interest simulator",
   "scripts": {
+    "check:calculations": "node ./scripts/check-compound-interest.js",
     "typecheck": "tsc --noEmit",
     "bundle": "webflow library bundle --public-path http://localhost:4000/ --no-input",
     "share": "webflow library share",
@@ -15,13 +16,14 @@
   },
   "dependencies": {
     "chart.js": "^4.5.0",
+    "lucide-react": "^0.575.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.4.1",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.4.1",
     "@webflow/data-types": "^1.1.0",
     "@webflow/react": "^1.1.0",
     "@webflow/webflow-cli": "^1.9.0",

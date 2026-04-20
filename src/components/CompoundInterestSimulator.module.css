@@ -85,9 +85,40 @@
 .inputArea {
 }
 
+.inputRow {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+}
+
 .inputContainer {
   margin: 24px 0;
   padding-bottom: 4px;
+}
+
+.inputContainerCompact {
+  margin: 0;
+  min-width: 0;
+}
+
+.inputFieldGroup {
+  display: grid;
+  grid-template-rows: minmax(16px, auto) 36px;
+  row-gap: 6px;
+}
+
+.inputFieldGroup > .inputLabel {
+  align-items: center;
+  display: flex;
+  line-height: 1.15;
+  margin-bottom: 0;
+}
+
+.inputFieldGroup > .inputLabelWithHelp {
+  align-items: center;
+  line-height: 1.15;
+  margin-bottom: 0;
 }
 
 .inputLabel {
@@ -98,6 +129,95 @@
   letter-spacing: 0.16em;
   margin-bottom: 0.35rem;
   text-transform: uppercase;
+}
+
+.inputLabelWithHelp {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  min-height: 16px;
+}
+
+.inputLabelWithHelp .inputLabel {
+  line-height: 1.15;
+  margin-bottom: 0;
+}
+
+.inputLabelHelpWrap {
+  align-items: center;
+  display: inline-flex;
+  position: relative;
+}
+
+.inputHelpIcon {
+  --input-help-icon-optical-y: -0.06em;
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  color: var(--ramify-grey-500);
+  cursor: help;
+  display: inline-flex;
+  height: 16px;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  position: relative;
+  top: 0;
+  width: 16px;
+}
+
+.inputHelpIconSvg {
+  height: 11px;
+  transform: translateY(var(--input-help-icon-optical-y));
+  width: 11px;
+}
+
+.inputHelpIcon:hover {
+  color: var(--ramify-grey-700);
+}
+
+.inputHelpIcon:focus-visible {
+  border-radius: 4px;
+  outline: 1px solid var(--ramify-grey-300);
+  outline-offset: 1px;
+}
+
+.inputHelpTooltip {
+  --input-help-tooltip-x: 0;
+  background: var(--ramify-grey-100);
+  border: 1px solid var(--ramify-grey-300);
+  box-sizing: border-box;
+  border-radius: 6px;
+  box-shadow: 0 8px 20px #00000014;
+  color: var(--ramify-grey-700);
+  font-size: 0.72rem;
+  line-height: 1.35;
+  max-width: 300px;
+  opacity: 0;
+  padding: 8px 10px;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  transform: translate(var(--input-help-tooltip-x), -2px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  width: max-content;
+  z-index: 5;
+}
+
+.inputHelpTooltipLine {
+  display: block;
+}
+
+.inputHelpTooltipLine + .inputHelpTooltipLine {
+  margin-top: 4px;
+}
+
+.inputLabelHelpWrap:hover .inputHelpTooltip,
+.inputLabelHelpWrap:focus-within .inputHelpTooltip {
+  opacity: 1;
+  transform: translate(var(--input-help-tooltip-x), 0);
 }
 
 .inputLine {
@@ -135,6 +255,33 @@
   color: var(--ramify-grey-600);
   font-size: 0.95rem;
   font-weight: 300;
+}
+
+.inputSelectLine {
+  position: relative;
+}
+
+.inputSelectField {
+  appearance: none;
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  display: flex;
+  font-family: var(--ramify-font-normal);
+  font-size: 1rem;
+  font-weight: 300;
+  height: 36px;
+  line-height: 36px;
+  outline: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.inputSelectChevron {
+  color: var(--ramify-grey-500);
+  font-size: 0.85rem;
+  pointer-events: none;
 }
 
 /* ── Imposition section ── */
@@ -193,9 +340,16 @@
   border-radius: 6px;
   color: var(--ramify-grey-600);
   font-size: 0.72rem;
-  line-height: 1.4;
+  line-height: 1.6;
   margin: 10px 0 2px;
   padding: 10px 12px;
+}
+
+.capitalizationSwitch {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 8px 0 0;
 }
 
 /* ── Custom tax inline row ── */
@@ -209,6 +363,30 @@
   gap: 12px;
   margin: 10px 0 2px;
   padding: 10px 12px;
+}
+
+.assuranceVieBox {
+  background: var(--ramify-grey-100);
+  border: 1px solid var(--ramify-grey-300);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 10px 0 2px;
+  padding: 10px 12px;
+}
+
+.assuranceVieField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.assuranceVieText {
+  color: var(--ramify-grey-600);
+  font-size: 0.72rem;
+  line-height: 1.6;
+  margin: 0;
 }
 
 .customTaxField {
@@ -296,6 +474,28 @@
   padding: 1.5rem;
 }
 
+.bottomPartComparison {
+  background-color: #f6ca82;
+  background-image:
+    radial-gradient(circle at 100% 0, rgba(255, 248, 236, 0.82), rgba(255, 248, 236, 0) 28%),
+    url("../images/ramify-stacks-classic.webp");
+  background-position:
+    0 0,
+    100% 100%;
+  background-repeat:
+    no-repeat,
+    no-repeat;
+  background-size:
+    auto,
+    cover;
+  box-shadow:
+    0 14px 32px rgba(130, 92, 34, 0.13),
+    inset 0 1px 0 rgba(255, 248, 236, 0.4);
+  color: var(--ramify-grey-900);
+  overflow: hidden;
+  padding: 1.8rem 1.9rem;
+}
+
 .comment {
   color: var(--ramify-grey-000);
   font-family: var(--ramify-font-heading);
@@ -303,6 +503,11 @@
   font-weight: 400;
   line-height: 1.3;
   margin: 0;
+}
+
+.commentComparison {
+  color: var(--ramify-grey-900);
+  max-width: 30rem;
 }
 
 .commentBody {
@@ -313,6 +518,11 @@
   margin: 0;
 }
 
+.commentBodyComparison {
+  color: rgba(30, 30, 30, 0.82);
+  max-width: 40rem;
+}
+
 .promoDisclaimer {
   color: var(--ramify-grey-300);
   font-size: 0.6rem;
@@ -321,10 +531,16 @@
 }
 
 .callToAction {
+  appearance: none;
   background: linear-gradient(90deg, var(--ramify-grey-900), var(--ramify-grey-800));
+  border: 0;
   border-radius: 0.25rem;
   color: var(--ramify-grey-100);
+  cursor: pointer;
   display: inline-block;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
   overflow: hidden;
   padding: 0.85rem 1.5rem;
   position: relative;
@@ -355,13 +571,34 @@
   top: 100%;
 }
 
+.callToActionComparison {
+  align-self: flex-start;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(249, 247, 244, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  border-radius: 0.45rem;
+  box-shadow:
+    0 10px 18px rgba(130, 92, 34, 0.14),
+    0 1px 0 rgba(255, 255, 255, 0.7) inset;
+  color: var(--ramify-grey-900);
+  margin-top: 0.25rem;
+  min-width: 228px;
+  padding: 0.9rem 1.45rem;
+  text-align: center;
+  width: auto;
+}
+
+.callToActionComparison .callToActionGlow {
+  background-color: rgba(255, 232, 188, 0.95);
+  filter: blur(18px);
+}
+
 /* ── Right panel ── */
 
 .chartPart {
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 58%;
 }
 
@@ -384,12 +621,19 @@
   width: 100%;
 }
 
+.resultBoxHeader {
+  align-items: start;
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
 .titleResult {
   align-items: baseline;
   display: flex;
+  flex-wrap: wrap;
   gap: 0.2rem;
-  margin-bottom: 0.5rem;
-  padding-right: 56px;
+  margin-bottom: 0;
+  padding-right: 0;
   width: 100%;
 }
 
@@ -414,76 +658,85 @@
   margin: 0;
 }
 
-.resultBoxActions {
-  align-items: center;
-  display: flex;
-  position: absolute;
-  right: 0;
-  top: 0;
-}
-
 .resultCompareButton {
-  background: var(--ramify-grey-100);
-  border: 0;
-  border-radius: 0 6px 0 0;
-  color: var(--ramify-grey-900);
+  align-items: center;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 247, 247, 0.98));
+  border: 1px solid var(--ramify-grey-300);
+  border-radius: 8px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 8px 18px rgba(31, 26, 18, 0.05);
+  color: var(--ramify-grey-800);
   cursor: pointer;
   display: inline-flex;
-  height: 36px;
-  align-items: center;
+  gap: 10px;
   justify-content: center;
-  padding: 0;
-  width: 40px;
+  min-height: 38px;
+  padding: 0 14px 0 10px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
-.resultCompareIcon {
+.resultSecondaryActions {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 0.9rem;
+}
+
+.resultCompareBadge {
+  align-items: center;
+  background: linear-gradient(180deg, rgba(249, 243, 235, 0.95), rgba(244, 235, 223, 0.95));
+  border: 1px solid rgba(180, 132, 59, 0.24);
+  border-radius: 6px;
+  display: inline-flex;
+  gap: 4px;
+  height: 22px;
+  justify-content: center;
+  min-width: 28px;
+  padding: 0 7px;
+}
+
+.resultCompareBadgeDot {
+  background: var(--ramify-gold-700);
+  border-radius: 999px;
+  display: inline-block;
+  height: 6px;
+  opacity: 0.9;
+  width: 6px;
+}
+
+.resultCompareBadgeIcon {
+  color: var(--ramify-gold-700);
+  height: 12px;
+  opacity: 0.92;
+  stroke-width: 1.9;
+  width: 12px;
+}
+
+.resultCompareText {
   font-family: var(--ramify-font-normal);
-  font-size: 1.25rem;
-  font-weight: 300;
-  line-height: 1;
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+  text-transform: none;
 }
 
 .resultCompareButton:focus-visible {
-  outline: 1px solid var(--ramify-grey-300);
-  outline-offset: -1px;
+  outline: 1px solid rgba(180, 132, 59, 0.4);
+  outline-offset: 2px;
 }
 
 .resultCompareButton:hover {
-  color: var(--ramify-grey-800);
-}
-
-.resultCompareTooltip {
-  display: none;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .resultCompareTooltip {
-    background: var(--ramify-grey-000);
-    border: 1px solid var(--ramify-grey-200);
-    border-radius: 4px;
-    color: var(--ramify-grey-600);
-    display: block;
-    font-family: var(--ramify-font-normal);
-    font-size: 0.72rem;
-    letter-spacing: 0.01em;
-    line-height: 1.2;
-    opacity: 0;
-    padding: 6px 8px;
-    pointer-events: none;
-    position: absolute;
-    right: calc(100% + 8px);
-    top: 50%;
-    transform: translateY(-50%);
-    visibility: hidden;
-    white-space: nowrap;
-    z-index: 3;
-  }
-
-  .resultCompareButton:hover + .resultCompareTooltip,
-  .resultCompareButton:focus-visible + .resultCompareTooltip {
-    opacity: 1;
-    visibility: visible;
-  }
+  border-color: rgba(180, 132, 59, 0.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 10px 22px rgba(31, 26, 18, 0.08);
+  color: var(--ramify-grey-900);
+  transform: translateY(-1px);
 }
 
 /* ── Result sentence ── */
@@ -575,6 +828,12 @@
   width: 100% !important;
 }
 
+.tablePanel {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
 .tableWrapper {
   border: 1px solid var(--ramify-grey-200);
   border-radius: 0;
@@ -586,37 +845,82 @@
 
 .tableElement {
   border-collapse: collapse;
-  min-width: 720px;
+  min-width: 560px;
   width: 100%;
 }
 
+.tableElementDetailed {
+  min-width: 860px;
+}
+
 .tableHeadCell {
-  background: var(--ramify-grey-100);
+  background: var(--ramify-grey-200);
   border-bottom: 1px solid var(--ramify-grey-200);
-  color: var(--ramify-grey-800);
-  font-size: 0.74rem;
+  color: var(--ramify-grey-600);
+  font-size: 0.66rem;
   font-weight: 300;
-  letter-spacing: 0.16em;
-  padding: 10px;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  padding: 9px 10px;
   position: sticky;
-  text-align: left;
   text-transform: uppercase;
   top: 0;
+  z-index: 1;
+}
+
+.tableHeadCellPeriod {
+  text-align: left;
+}
+
+.tableHeadCellNumeric {
+  text-align: right;
+}
+
+.tableHeadCellSecondary {
+  color: var(--ramify-grey-500);
 }
 
 .tableCell {
   border-bottom: 1px solid var(--ramify-grey-200);
   color: var(--ramify-grey-800);
-  font-size: 0.84rem;
+  font-size: 0.83rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
   padding: 8px 10px;
+}
+
+.tableCellPeriod {
+  background: var(--ramify-grey-100);
   text-align: left;
+  white-space: nowrap;
+}
+
+.tableCellNumeric {
+  text-align: right;
+}
+
+.tableCellSecondary {
+  color: var(--ramify-grey-600);
+  font-size: 0.78rem;
+}
+
+.tableValueMuted {
+  color: var(--ramify-grey-500);
+}
+
+.tableValuePositive {
+  color: #1f7a43;
+}
+
+.tableValueNegative {
+  color: #b13a2c;
 }
 
 /* ── Receipt / Bill ── */
 
 .billContainer {
   border-top: 1px solid var(--ramify-grey-300);
-  margin: 0.75rem 0 0.5rem;
+  margin: 0.6rem 0 0.35rem;
   overflow-x: auto;
   text-align: left;
   width: 100%;
@@ -625,21 +929,50 @@
 .billRow {
   align-items: center;
   border-bottom: 1px solid var(--ramify-grey-200);
+  box-sizing: border-box;
   display: flex;
   justify-content: space-between;
-  padding: 9px 0;
+  min-height: 40px;
+  padding: 0;
   width: 100%;
+}
+
+.billRowIndented .billLabel {
+  padding-left: 14px;
+}
+
+.billRowNested {
+  min-height: 34px;
+  padding: 0;
+}
+
+.billRowNested .billLabel {
+  font-size: 0.71rem;
+  letter-spacing: 0.13em;
+}
+
+.billRowNested .billLabelNote {
+  font-size: 0.6rem;
+}
+
+.billRowNested .billValue {
+  font-size: 0.84rem;
+}
+
+.billRowNested.billRowIndented .billLabel {
+  padding-left: 18px;
 }
 
 .billRowTotal {
   border-bottom-color: var(--ramify-grey-300);
-  padding: 10px 0;
+  min-height: 42px;
+  padding: 0;
 }
 
 .billRowHeader {
   background: var(--ramify-grey-100);
   min-height: 44px;
-  padding: 10px 0;
+  padding: 0;
 }
 
 .billRowComparative {
@@ -650,14 +983,40 @@
   min-width: 540px;
 }
 
+.billRowComparative .billLabel {
+  min-width: 0;
+}
+
+.billRowGrossAnnualized .billSectionToggle,
+.billRowGrossAnnualized .billSectionStaticLabel {
+  color: var(--ramify-grey-900);
+}
+
 .billLabel {
   color: var(--ramify-grey-500);
+  display: flex;
   font-size: 0.76rem;
+  flex-wrap: wrap;
+  gap: 4px;
   font-weight: 300;
+  align-items: center;
   letter-spacing: 0.16em;
   line-height: 1.2;
   text-align: left;
   text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.billLabelMain {
+  white-space: nowrap;
+}
+
+.billLabelNote {
+  color: var(--ramify-grey-400);
+  font-size: 0.63rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  text-transform: none;
   white-space: nowrap;
 }
 
@@ -690,6 +1049,11 @@
   text-transform: uppercase;
 }
 
+.billValueHeaderWinner {
+  color: #1f7a43;
+  font-weight: 500;
+}
+
 .billValuePositive {
   color: #1f7a43;
 }
@@ -698,9 +1062,137 @@
   color: #b13a2c;
 }
 
+.billSectionToggle {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  gap: 6px;
+  letter-spacing: inherit;
+  line-height: inherit;
+  padding: 0;
+  text-align: left;
+  text-transform: inherit;
+}
+
+.billRowComparative .billSectionToggle,
+.billRowComparative .billSectionStaticLabel {
+  min-width: 0;
+  width: 100%;
+}
+
+.billSectionLabelContent {
+  align-items: center;
+  display: inline-flex;
+  gap: 4px;
+}
+
+.billSectionLabelContent .billLabelMain {
+  margin-top: 3px;
+}
+
+.billRowComparative .billSectionLabelContent {
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.billSectionStaticLabel {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+}
+
+.billSectionChevron {
+  color: var(--ramify-gold-700);
+  display: inline-flex;
+  line-height: 1;
+}
+
+.billSectionChevronSpacer {
+  display: inline-flex;
+  line-height: 1;
+  visibility: hidden;
+}
+
+.billSectionChevronIcon {
+  height: 0.82rem;
+  stroke-width: 1.7;
+  width: 0.82rem;
+}
+
+.billSectionChevronIcon > * {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.18s ease;
+}
+
+.billSectionChevronIconExpand > *:first-child,
+.billSectionChevronIconCollapse > *:first-child {
+  transform: translateY(0.45px);
+}
+
+.billSectionChevronIconExpand > *:last-child,
+.billSectionChevronIconCollapse > *:last-child {
+  transform: translateY(-0.45px);
+}
+
+.billRowComparative .billLabelNote {
+  white-space: normal;
+}
+
+.billSectionToggle:hover .billSectionChevronIconExpand > *:first-child {
+  transform: translateY(1.45px);
+}
+
+.billSectionToggle:hover .billSectionChevronIconExpand > *:last-child {
+  transform: translateY(-1.45px);
+}
+
+.billSectionToggle:hover .billSectionChevronIconCollapse > *:first-child {
+  transform: translateY(-0.55px);
+}
+
+.billSectionToggle:hover .billSectionChevronIconCollapse > *:last-child {
+  transform: translateY(0.55px);
+}
+
 .billRowTotal .billValue {
   color: var(--ramify-gold-700);
   font-size: 0.9rem;
+}
+
+.billRowTotal .billValue.billValuePositive {
+  color: #1f7a43;
+}
+
+.billRowTotal .billValue.billValueNegative {
+  color: #b13a2c;
+}
+
+.billNotes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.billNote {
+  color: var(--ramify-grey-600);
+  font-size: 0.7rem;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.billNoteMarker {
+  color: var(--ramify-grey-800);
+  display: inline-block;
+  font-weight: 400;
+  margin-right: 6px;
+  min-width: 14px;
 }
 
 .advisorLinkRow {
@@ -726,6 +1218,274 @@
   transform: translateY(-1px);
 }
 
+/* ── Advisor modal ── */
+
+.contactModalOverlay {
+  align-items: center;
+  background: rgba(30, 30, 30, 0.54);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 24px;
+  position: fixed;
+  z-index: 9999;
+}
+
+.contactModalDialog {
+  background: var(--ramify-grey-000);
+  border-radius: 16px;
+  box-shadow: 0px 20px 60px 0px rgba(30, 30, 30, 0.22);
+  display: flex;
+  flex-direction: column;
+  max-height: min(92vh, 960px);
+  overflow: hidden;
+  width: min(880px, 100%);
+}
+
+.contactModalHeader {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 24px 24px 0;
+}
+
+.contactModalHeaderContent {
+  flex: 1;
+}
+
+.contactModalProgress {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.contactModalProgressStep {
+  background: var(--ramify-grey-200);
+  border-radius: 999px;
+  height: 4px;
+  width: 48px;
+}
+
+.contactModalProgressStepActive {
+  background: var(--ramify-gold-700);
+}
+
+.contactModalTitle {
+  color: var(--ramify-grey-900);
+  font-family: var(--ramify-font-heading);
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.contactModalLead {
+  color: var(--ramify-grey-600);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin: 0.75rem 0 0;
+  max-width: 54ch;
+}
+
+.contactModalCloseButton {
+  align-self: flex-start;
+  background: transparent;
+  border: 0;
+  color: var(--ramify-grey-600);
+  cursor: pointer;
+  font-size: 2rem;
+  line-height: 1;
+  padding: 0;
+}
+
+.contactModalBody {
+  overflow: auto;
+  padding: 20px 24px 24px;
+}
+
+.contactAmountList {
+  display: grid;
+  gap: 12px;
+}
+
+.contactAmountButton {
+  align-items: center;
+  background: linear-gradient(180deg, white, var(--ramify-grey-100));
+  border: 1px solid var(--ramify-grey-200);
+  border-radius: 12px;
+  color: var(--ramify-grey-900);
+  cursor: pointer;
+  display: flex;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+  justify-content: space-between;
+  min-height: 64px;
+  padding: 16px 18px;
+  text-align: left;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+}
+
+.contactAmountButton:hover {
+  border-color: var(--ramify-gold-500);
+  box-shadow: 0px 10px 24px 0px rgba(180, 132, 59, 0.12);
+  transform: translateY(-1px);
+}
+
+.contactAmountButtonLabel {
+  line-height: 1.35;
+}
+
+.contactAmountButtonArrow {
+  color: var(--ramify-gold-700);
+  flex-shrink: 0;
+  font-size: 1.15rem;
+}
+
+.contactCalendlyStage {
+  min-height: 700px;
+  position: relative;
+}
+
+.contactCalendlyContainer {
+  position: relative;
+  width: 100%;
+  z-index: 0;
+}
+
+.contactCalendlyContainer > div {
+  display: block;
+  height: 700px !important;
+  min-width: 100% !important;
+}
+
+.contactCalendlyContainer iframe {
+  display: block;
+  height: 100% !important;
+  min-height: 700px !important;
+  width: 100% !important;
+}
+
+.contactCalendlyContainer :global(.calendly-spinner) {
+  display: none !important;
+}
+
+.contactCalendlyLoader {
+  align-items: center;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 247, 247, 0.98)),
+    var(--ramify-grey-000);
+  border: 1px solid var(--ramify-grey-200);
+  border-radius: 14px;
+  box-shadow: 0 18px 36px rgba(31, 26, 18, 0.06);
+  display: flex;
+  flex-direction: column;
+  inset: 0;
+  justify-content: center;
+  padding: 32px 28px;
+  position: absolute;
+  text-align: center;
+  z-index: 1;
+}
+
+.contactCalendlyLoaderError {
+  background: linear-gradient(180deg, rgba(248, 247, 247, 0.98), rgba(244, 241, 239, 0.98));
+}
+
+.contactCalendlyLoaderSpinner {
+  animation: contactCalendlySpin 0.9s linear infinite;
+  border: 3px solid rgba(180, 132, 59, 0.18);
+  border-top-color: var(--ramify-gold-700);
+  border-radius: 999px;
+  display: block;
+  height: 40px;
+  margin-bottom: 16px;
+  width: 40px;
+}
+
+.contactCalendlyLoaderTitle {
+  color: var(--ramify-grey-900);
+  font-family: var(--ramify-font-heading);
+  font-size: 1.15rem;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.contactCalendlyLoaderText {
+  color: var(--ramify-grey-600);
+  font-size: 0.86rem;
+  line-height: 1.55;
+  margin: 10px 0 0;
+  max-width: 32ch;
+}
+
+.contactCalendlyLoaderActions {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.contactCalendlyLoaderPrimaryLink {
+  align-items: center;
+  background: var(--ramify-grey-900);
+  border-radius: 999px;
+  color: var(--ramify-grey-000);
+  display: inline-flex;
+  font-size: 0.86rem;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0.65rem 1rem;
+  text-decoration: none;
+}
+
+.contactCalendlyLoaderHint {
+  color: var(--ramify-grey-500);
+  font-size: 0.74rem;
+  line-height: 1.45;
+  margin: 0;
+  max-width: 34ch;
+}
+
+.contactModalFooter {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.contactModalSecondaryAction {
+  background: transparent;
+  border: 1px solid var(--ramify-grey-300);
+  border-radius: 999px;
+  color: var(--ramify-grey-800);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 0.7rem 1rem;
+}
+
+.contactModalFallbackLink {
+  align-items: center;
+  color: var(--ramify-grey-600);
+  display: inline-flex;
+  font-size: 0.88rem;
+  justify-content: center;
+  text-decoration: underline;
+  text-underline-offset: 0.14rem;
+}
+
+@keyframes contactCalendlySpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* ── Disclaimer ── */
 
 .disclaimerContainer {
@@ -734,7 +1494,8 @@
 
 .disclaimer {
   color: var(--ramify-grey-500);
-  font-size: 0.76rem;
+  font-size: 0.7rem;
+  line-height: 1.45;
   margin: 16px 0 0;
   text-align: left;
 }
@@ -756,6 +1517,11 @@
 /* ── Responsive ── */
 
 @media only screen and (max-width: 1000px) {
+  .inputRow {
+    grid-template-columns: 1fr;
+    margin: 0;
+  }
+
   .tabButton {
     font-size: 0.72rem;
     padding: 8px 2px;
@@ -793,8 +1559,18 @@
     margin-top: 1rem;
   }
 
-  .inputField {
-    font-size: 0.9rem;
+  .inputHelpTooltip {
+    --input-help-tooltip-x: -50%;
+    left: 50%;
+    max-width: min(20rem, calc(100vw - 32px));
+    right: auto;
+    width: min(20rem, calc(100vw - 32px));
+  }
+
+  .inputField,
+  .inputSelectField,
+  .customTaxInputField {
+    font-size: 16px;
   }
 
   .mainSentence {
@@ -826,16 +1602,81 @@
     min-width: 0;
     width: 100%;
   }
+
+  .contactModalOverlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .contactModalDialog {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    max-height: 94vh;
+    width: 100%;
+  }
+
+  .contactModalHeader {
+    padding: 18px 16px 0;
+  }
+
+  .contactModalBody {
+    padding: 18px 16px 20px;
+  }
+
+  .contactModalTitle {
+    font-size: 1.55rem;
+  }
+
+  .contactCalendlyStage {
+    min-height: 620px;
+  }
+
+  .contactCalendlyContainer > div,
+  .contactCalendlyContainer iframe {
+    height: 620px !important;
+  }
+
+  .contactCalendlyContainer iframe {
+    min-height: 620px !important;
+  }
+
+  .contactModalFooter {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .contactModalSecondaryAction,
+  .contactModalFallbackLink {
+    width: 100%;
+  }
+
+  .contactModalFallbackLink {
+    text-align: center;
+  }
 }
 
 @media only screen and (max-width: 500px) {
-  .taxOptionsGrid,
   .taxMethodSwitch {
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .resultCompareButton {
+    min-height: 36px;
+    padding: 0 13px 0 10px;
+  }
+
+  .resultCompareText {
+    font-size: 0.74rem;
+  }
+
+  .resultCompareBadge {
+    min-width: 26px;
+    padding: 0 6px;
+  }
+
   .titleResult {
     flex-wrap: wrap;
+    padding-right: 0;
   }
 
   .resultHeadline,
@@ -867,6 +1708,28 @@
     font-size: 0.8rem;
   }
 
+  .contactModalTitle {
+    font-size: 1.35rem;
+  }
+
+  .contactAmountButton {
+    min-height: 58px;
+    padding: 14px 16px;
+  }
+
+  .contactCalendlyLoader {
+    border-radius: 12px;
+    padding: 28px 20px;
+  }
+
+  .contactCalendlyLoaderTitle {
+    font-size: 1.05rem;
+  }
+
+  .contactCalendlyLoaderText {
+    font-size: 0.82rem;
+  }
+
   .chartArea {
     height: 44vw;
     min-height: 180px;
@@ -880,5 +1743,20 @@
   .tableHeadCell,
   .tableCell {
     font-size: 0.74rem;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .inputContainer {
+    margin: 18px 0;
+  }
+
+  .impositionSection {
+    margin-top: 18px;
+  }
+
+  .taxOptionPill {
+    font-size: 0.74rem;
+    padding: 6px 3px;
   }
 }
