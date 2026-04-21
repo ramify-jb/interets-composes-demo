@@ -78,17 +78,24 @@ assert_dist_assets_exist() {
   fi
 }
 
+fetch_latest_pages_build() {
+  local repo="$1"
+
+  gh api "repos/${repo}/pages/builds?per_page=1" --jq '.[0] | [.commit, .status] | @tsv'
+}
+
 wait_for_pages_build() {
   local repo="$1"
   local expected_commit="$2"
   local max_attempts="${3:-24}"
   local attempt=1
+  local latest_build=""
   local latest_commit=""
   local latest_status=""
 
   while (( attempt <= max_attempts )); do
-    latest_commit="$(gh api "repos/${repo}/pages/builds?per_page=1" --jq '.[0].commit')"
-    latest_status="$(gh api "repos/${repo}/pages/builds?per_page=1" --jq '.[0].status')"
+    latest_build="$(fetch_latest_pages_build "$repo")"
+    IFS=$'\t' read -r latest_commit latest_status <<< "$latest_build"
 
     if [[ "$latest_commit" == "$expected_commit" && "$latest_status" == "built" ]]; then
       return 0
