@@ -80,19 +80,22 @@ assert_dist_assets_exist() {
 
 wait_for_pages_build() {
   local repo="$1"
-  local max_attempts="${2:-24}"
+  local expected_commit="$2"
+  local max_attempts="${3:-24}"
   local attempt=1
-  local status=""
+  local latest_commit=""
+  local latest_status=""
 
   while (( attempt <= max_attempts )); do
-    status="$(gh api "repos/${repo}/pages" --jq '.status')"
+    latest_commit="$(gh api "repos/${repo}/pages/builds?per_page=1" --jq '.[0].commit')"
+    latest_status="$(gh api "repos/${repo}/pages/builds?per_page=1" --jq '.[0].status')"
 
-    if [[ "$status" == "built" ]]; then
+    if [[ "$latest_commit" == "$expected_commit" && "$latest_status" == "built" ]]; then
       return 0
     fi
 
-    if [[ "$status" == "errored" ]]; then
-      echo "GitHub Pages build errored for ${repo}." >&2
+    if [[ "$latest_commit" == "$expected_commit" && "$latest_status" == "errored" ]]; then
+      echo "GitHub Pages build errored for ${repo} at ${expected_commit}." >&2
       gh api "repos/${repo}/pages/builds?per_page=1" >&2 || true
       exit 1
     fi
@@ -101,24 +104,26 @@ wait_for_pages_build() {
     ((attempt++))
   done
 
-  echo "Timed out waiting for GitHub Pages to finish building ${repo}. Last status: ${status:-unknown}" >&2
+  echo "Timed out waiting for GitHub Pages to finish building ${repo} at ${expected_commit}. Last seen build: ${latest_commit:-unknown} (${latest_status:-unknown})" >&2
   exit 1
 }
 
 assert_live_demo_html() {
   local url="$1"
   local expected_commit="$2"
+  local expected_js_bundle="$3"
+  local expected_css_bundle="$4"
   local html
 
   html="$(curl -Lks "${url}?v=${expected_commit}")"
 
-  if [[ "$html" != *"src=\"${PUBLIC_DEMO_BASE_PATH}assets/"* ]]; then
-    echo "Published HTML does not contain the expected JS base path (${PUBLIC_DEMO_BASE_PATH}assets/)." >&2
+  if [[ "$html" != *"src=\"${PUBLIC_DEMO_BASE_PATH}assets/${expected_js_bundle}\""* ]]; then
+    echo "Published HTML does not reference the expected JS bundle (${expected_js_bundle})." >&2
     exit 1
   fi
 
-  if [[ "$html" != *"href=\"${PUBLIC_DEMO_BASE_PATH}assets/"* ]]; then
-    echo "Published HTML does not contain the expected CSS base path (${PUBLIC_DEMO_BASE_PATH}assets/)." >&2
+  if [[ "$html" != *"href=\"${PUBLIC_DEMO_BASE_PATH}assets/${expected_css_bundle}\""* ]]; then
+    echo "Published HTML does not reference the expected CSS bundle (${expected_css_bundle})." >&2
     exit 1
   fi
 }
@@ -208,10 +213,10 @@ git push origin "$PUBLIC_DEMO_BRANCH"
 DEPLOYED_SHA="$(git rev-parse HEAD)"
 
 echo "Waiting for GitHub Pages to publish ${DEPLOYED_SHA}..."
-wait_for_pages_build "$PUBLIC_DEMO_REPO"
+wait_for_pages_build "$PUBLIC_DEMO_REPO" "$DEPLOYED_SHA"
 
 echo "Verifying live HTML..."
-assert_live_demo_html "$PUBLIC_DEMO_URL" "$DEPLOYED_SHA"
+assert_live_demo_html "$PUBLIC_DEMO_URL" "$DEPLOYED_SHA" "$CURRENT_JS_BUNDLE" "$CURRENT_CSS_BUNDLE"
 
 echo "Demo deployed successfully."
 echo "Public demo: ${PUBLIC_DEMO_URL}"
