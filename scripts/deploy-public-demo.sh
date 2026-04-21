@@ -5,6 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PUBLIC_DEMO_REPO="${PUBLIC_DEMO_REPO:-ramify-jb/interets-composes-demo}"
 PUBLIC_DEMO_BRANCH="${PUBLIC_DEMO_BRANCH:-gh-pages}"
 PUBLIC_DEMO_URL="https://${PUBLIC_DEMO_REPO%%/*}.github.io/${PUBLIC_DEMO_REPO##*/}/"
+PUBLIC_DEMO_BASE_PATH="/${PUBLIC_DEMO_REPO##*/}/"
 LEGACY_JS_ALIASES=(
   "index-B4JZRiP8.js"
   "index-Dek-UYcY.js"
@@ -26,6 +27,7 @@ require_cmd git
 require_cmd gh
 require_cmd rsync
 require_cmd npm
+require_cmd curl
 
 extract_asset_name() {
   local html_file="$1"
@@ -42,6 +44,85 @@ extract_asset_name() {
   fi
 }
 
+assert_dist_build_looks_publishable() {
+  local html_file="$1"
+
+  if [[ ! -f "$html_file" ]]; then
+    echo "Missing dist HTML: $html_file" >&2
+    exit 1
+  fi
+
+  if ! grep -q "src=\"${PUBLIC_DEMO_BASE_PATH}assets/" "$html_file"; then
+    echo "dist/index.html does not contain the expected JS base path (${PUBLIC_DEMO_BASE_PATH}assets/)." >&2
+    exit 1
+  fi
+
+  if ! grep -q "href=\"${PUBLIC_DEMO_BASE_PATH}assets/" "$html_file"; then
+    echo "dist/index.html does not contain the expected CSS base path (${PUBLIC_DEMO_BASE_PATH}assets/)." >&2
+    exit 1
+  fi
+}
+
+assert_dist_assets_exist() {
+  local js_bundle="$1"
+  local css_bundle="$2"
+
+  if [[ ! -f "$ROOT_DIR/dist/assets/$js_bundle" ]]; then
+    echo "Missing built JS asset: dist/assets/$js_bundle" >&2
+    exit 1
+  fi
+
+  if [[ ! -f "$ROOT_DIR/dist/assets/$css_bundle" ]]; then
+    echo "Missing built CSS asset: dist/assets/$css_bundle" >&2
+    exit 1
+  fi
+}
+
+wait_for_pages_build() {
+  local repo="$1"
+  local max_attempts="${2:-24}"
+  local attempt=1
+  local status=""
+
+  while (( attempt <= max_attempts )); do
+    status="$(gh api "repos/${repo}/pages" --jq '.status')"
+
+    if [[ "$status" == "built" ]]; then
+      return 0
+    fi
+
+    if [[ "$status" == "errored" ]]; then
+      echo "GitHub Pages build errored for ${repo}." >&2
+      gh api "repos/${repo}/pages/builds?per_page=1" >&2 || true
+      exit 1
+    fi
+
+    sleep 5
+    ((attempt++))
+  done
+
+  echo "Timed out waiting for GitHub Pages to finish building ${repo}. Last status: ${status:-unknown}" >&2
+  exit 1
+}
+
+assert_live_demo_html() {
+  local url="$1"
+  local expected_commit="$2"
+  local html
+
+  html="$(curl -Lks "${url}?v=${expected_commit}")"
+
+  if [[ "$html" != *"src=\"${PUBLIC_DEMO_BASE_PATH}assets/"* ]]; then
+    echo "Published HTML does not contain the expected JS base path (${PUBLIC_DEMO_BASE_PATH}assets/)." >&2
+    exit 1
+  fi
+
+  if [[ "$html" != *"href=\"${PUBLIC_DEMO_BASE_PATH}assets/"* ]]; then
+    echo "Published HTML does not contain the expected CSS base path (${PUBLIC_DEMO_BASE_PATH}assets/)." >&2
+    exit 1
+  fi
+}
+
 if ! gh auth status >/dev/null 2>&1; then
   echo "GitHub CLI is not authenticated. Run: gh auth login" >&2
   exit 1
@@ -55,8 +136,10 @@ fi
 echo "Building demo with base path for ${PUBLIC_DEMO_REPO}..."
 (
   cd "$ROOT_DIR"
-  VITE_BASE_PATH="/${PUBLIC_DEMO_REPO##*/}/" npm run build >/dev/null
+  VITE_BASE_PATH="$PUBLIC_DEMO_BASE_PATH" npm run build >/dev/null
 )
+
+assert_dist_build_looks_publishable "$ROOT_DIR/dist/index.html"
 
 CURRENT_JS_BUNDLE="$(sed -nE 's|.*src=".*/assets/([^"]+\.js)".*|\1|p' "$ROOT_DIR/dist/index.html" | head -n 1)"
 CURRENT_CSS_BUNDLE="$(sed -nE 's|.*href=".*/assets/([^"]+\.css)".*|\1|p' "$ROOT_DIR/dist/index.html" | head -n 1)"
@@ -65,6 +148,8 @@ if [[ -z "$CURRENT_JS_BUNDLE" || -z "$CURRENT_CSS_BUNDLE" ]]; then
   echo "Could not determine current build assets from dist/index.html" >&2
   exit 1
 fi
+
+assert_dist_assets_exist "$CURRENT_JS_BUNDLE" "$CURRENT_CSS_BUNDLE"
 
 TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/interets-demo-deploy.XXXXXX")"
 cleanup() {
@@ -119,6 +204,14 @@ git -c user.name="${DEMO_GIT_USER_NAME:-Ramify Demo Bot}" \
   commit -m "chore: deploy demo (${timestamp})" >/dev/null
 
 git push origin "$PUBLIC_DEMO_BRANCH"
+
+DEPLOYED_SHA="$(git rev-parse HEAD)"
+
+echo "Waiting for GitHub Pages to publish ${DEPLOYED_SHA}..."
+wait_for_pages_build "$PUBLIC_DEMO_REPO"
+
+echo "Verifying live HTML..."
+assert_live_demo_html "$PUBLIC_DEMO_URL" "$DEPLOYED_SHA"
 
 echo "Demo deployed successfully."
 echo "Public demo: ${PUBLIC_DEMO_URL}"
