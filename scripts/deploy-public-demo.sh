@@ -84,24 +84,31 @@ fetch_latest_pages_build() {
   gh api "repos/${repo}/pages/builds?per_page=1" --jq '.[0] | [.commit, .status] | @tsv'
 }
 
+fetch_pages_build_status_for_commit() {
+  local repo="$1"
+  local expected_commit="$2"
+
+  gh api "repos/${repo}/pages/builds?per_page=100" --jq "map(select(.commit == \"${expected_commit}\")) | .[0].status // \"\""
+}
+
 wait_for_pages_build() {
   local repo="$1"
   local expected_commit="$2"
   local max_attempts="${3:-24}"
   local attempt=1
-  local latest_build=""
-  local latest_commit=""
   local latest_status=""
+  local fallback_build=""
+  local fallback_commit=""
+  local fallback_status=""
 
   while (( attempt <= max_attempts )); do
-    latest_build="$(fetch_latest_pages_build "$repo")"
-    IFS=$'\t' read -r latest_commit latest_status <<< "$latest_build"
+    latest_status="$(fetch_pages_build_status_for_commit "$repo" "$expected_commit")"
 
-    if [[ "$latest_commit" == "$expected_commit" && "$latest_status" == "built" ]]; then
+    if [[ "$latest_status" == "built" ]]; then
       return 0
     fi
 
-    if [[ "$latest_commit" == "$expected_commit" && "$latest_status" == "errored" ]]; then
+    if [[ "$latest_status" == "errored" ]]; then
       echo "GitHub Pages build errored for ${repo} at ${expected_commit}." >&2
       gh api "repos/${repo}/pages/builds?per_page=1" >&2 || true
       exit 1
@@ -111,7 +118,10 @@ wait_for_pages_build() {
     ((attempt++))
   done
 
-  echo "Timed out waiting for GitHub Pages to finish building ${repo} at ${expected_commit}. Last seen build: ${latest_commit:-unknown} (${latest_status:-unknown})" >&2
+  fallback_build="$(fetch_latest_pages_build "$repo")"
+  IFS=$'\t' read -r fallback_commit fallback_status <<< "$fallback_build"
+
+  echo "Timed out waiting for GitHub Pages to finish building ${repo} at ${expected_commit}. Last seen latest build: ${fallback_commit:-unknown} (${fallback_status:-unknown}); target status: ${latest_status:-missing}" >&2
   exit 1
 }
 
